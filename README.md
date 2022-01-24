@@ -57,3 +57,31 @@ void loop() {
   
 }
 ```
+## Performance
+Tested on ESP32 WROOM DevKit v1 board with 240 MHz Core clock.
+#### Test code
+```C++
+static double benchCalc(void)
+{
+  double t = 8521.0234;
+  double s = sin(t) + 21000;
+
+  s = t * sqrt(s);
+  t = log(t);
+
+  double sum = t;
+  for (int i = 0; i < 256; ++i)
+  {
+    sum += log(t);
+  }
+
+  return (t / s) + sum;
+}
+```
+The analog functions were written in Lua and MicroPython using the standard math library.
+#### Test results
+| Language | Time (us) | Function output |
+| --- | --- | --- |
+| C++ | 76 | 572.966329 |
+| Lua | 4983 | 572.9656 |
+| MicroPython | 13832 | 570.7628 |
