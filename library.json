@@ -1,0 +1,21 @@
+{
+  "name": "libLua",
+  "keywords": "Lua, Scripting Language, Utility, DECE",
+  "description": "Just lua.",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/DECE2183/libLua"
+  },
+  "authors":
+  [
+    {
+      "name": "DECE",
+      "url": "https://github.com/DECE2183",
+      "maintainer": true
+    }
+  ],
+  "version": "0.1.0",
+  "frameworks": "arduino",
+  "platforms": "stm32, espressif8266, espressif32"
+}
