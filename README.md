@@ -43,7 +43,7 @@ void setup()
     while(1);
   }
   
-  // Register custom println library
+  // Register custom println function
   lua_register(L, "println", luaprint_func);
   
   // Register standard Lua libraries
