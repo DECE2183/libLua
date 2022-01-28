@@ -2,10 +2,10 @@
 
 enum class LuaScriptType
 {
-  PlaneText,
+  PlainText,
   Compiled,
-  Hashed,
-  CompiledAndHashed,
+  Compressed,
+  CompiledAndCompressed,
 };
 
 struct LuaScript

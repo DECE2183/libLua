@@ -1,22 +1,27 @@
 import os
+import sys
 from pathlib import Path
 
 INPUT_PATH = "./lua_scripts"
+BINARIES_PATH = "./lua_binaries"
+BITSTREAMS_PATH = "./lua_compiled"
 OUTPUT_PATH = "./src/scripts"
 NEW_LINE_SIMBOL = "\n"
 
 
 class ScriptType:
-    PlaneText = "PlaneText"
+    PlainText = "PlainText"
     Compiled = "Compiled"
-    Hashed = "Hashed"
-    CompiledAndHashed = "CompiledAndHashed"
+    Compressed = "Compressed"
+    CompiledAndCompressed = "CompiledAndCompressed"
 
-    def __init__(self, type):
-        if (type != self.PlaneText and type != self.Compiled and type != self.Hashed and type != self.CompiledAndHashed):
-            raise RuntimeError(f"There is no ScriptType \"{type}\"")
-        self.type = type
+    def __init__(self, stype):
+        stype = str(stype)
+        if (stype != self.PlainText and stype != self.Compiled and stype != self.Compressed and stype != self.CompiledAndCompressed):
+            raise RuntimeError(f"There is no ScriptType \"{stype}\"")
+        self.type = stype
 
+    @property
     def get_property(self):
         return self.type
 
@@ -35,10 +40,17 @@ def removeRangeFromString(string, start_str, stop_str):
     return string
 
 def compileLuaScript(script_path):
-    bitstream_path = ".\\lua_compiled\\" + script_path + "c"
-    script_path = ".\\lua_scripts\\" + script_path
+    bitstream_folder = Path(BITSTREAMS_PATH)
+    binaries_folder = Path(BINARIES_PATH)
 
-    compilation_result = os.system(f".\\lua_binaries\\luac.exe -o {bitstream_path} {script_path}")
+    bitstream_folder.mkdir(parents=True, exist_ok=True)
+
+    bitstream_path = bitstream_folder.joinpath(script_path + "c")
+    script_path = Path(INPUT_PATH).joinpath(script_path)
+    binary_path = binaries_folder.joinpath("luac.exe")
+
+    system_command = f"{binary_path} -o {bitstream_path} {script_path}"
+    compilation_result = os.system(system_command)
     if (compilation_result != 0):
         print(f"Compilation error: {compilation_result}")
         return None
@@ -63,9 +75,9 @@ def prepareScript(script_name, script_path, script_content, type):
     new_script_content = script_content
     new_script_length = 0
 
-    if (type == ScriptType.Compiled or type == ScriptType.CompiledAndHashed):
+    if (type == ScriptType.Compiled or type == ScriptType.CompiledAndCompressed):
         script_binary = compileLuaScript(script_path)
-        if (new_script_content == None):
+        if (script_binary == None):
             return ""
 
         new_script_length = len(script_binary)
@@ -89,7 +101,7 @@ def prepareScript(script_name, script_path, script_content, type):
     file_content = "#pragma once" + NEW_LINE_SIMBOL
     file_content += "#include \"../lua_script.hpp\"" + NEW_LINE_SIMBOL + NEW_LINE_SIMBOL
 
-    if (type == ScriptType.Compiled or type == ScriptType.CompiledAndHashed):
+    if (type == ScriptType.Compiled or type == ScriptType.CompiledAndCompressed):
         file_content += f"static const unsigned char {script_name}_lua_bytecode[] = {new_script_content};" + NEW_LINE_SIMBOL + NEW_LINE_SIMBOL
         new_script_content = f"(const char *){script_name}_lua_bytecode"
 
@@ -109,8 +121,16 @@ def prepareScript(script_name, script_path, script_content, type):
 
 
 if __name__ == "__main__":
+    args = sys.argv
+
     input_path = Path(INPUT_PATH)
     output_path = Path(OUTPUT_PATH)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    scripts_type = ScriptType(ScriptType.PlainText)
+
+    if len(args) > 1 and args[1] != None:
+        scripts_type = ScriptType(args[1])
 
     pathlist = input_path.rglob("*.lua")
     for path in pathlist:
@@ -124,5 +144,5 @@ if __name__ == "__main__":
         script_file.close()
 
         output_file = open(output_path.joinpath(Path(script_name + "_lua.h")), "w", encoding=("utf-8"))
-        output_file.write(prepareScript(script_name, script_path, script_content, ScriptType.PlaneText))
+        output_file.write(prepareScript(script_name, script_path, script_content, scripts_type.type))
         output_file.close()
