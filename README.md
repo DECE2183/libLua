@@ -57,6 +57,24 @@ void loop() {
   
 }
 ```
+For an easier way to call lua script you may use this:
+```C++
+LuaScripts::hello_world_lua.call(L);
+```
+
+## Compilation
+prepareScripts.py takes an argument specifying what to do with the Lua scripts.
+It can have one of four values:
+ - PlainText (Default) - Just remove duplicate spaces and comments;
+ - Compiled - Compile scripts to bytecode with Luac. Compiled scripts take up more space but take less time to start;
+ - Compressed - (Not implemented yet) - compressed plain text;
+ - CompiledAndCompressed - (Not implemented yet) - compressed bytecode.
+
+Usage example:
+```Bash
+py ./prepareScripts.py Compiled
+```
+
 ## Performance
 Tested on ESP32 WROOM DevKit v1 board with 240 MHz Core clock.
 #### Test code
@@ -83,5 +101,5 @@ The analog functions were written in Lua and MicroPython using the standard math
 | Language | Time (us) | Function output |
 | --- | --- | --- |
 | C++ | 76 | 572.966329 |
-| Lua | 4983 | 572.9656 |
+| Lua | 1940 | 572.9656 |
 | MicroPython | 13832 | 570.7628 |

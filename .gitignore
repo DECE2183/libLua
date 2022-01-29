@@ -1,5 +1,6 @@
 # Prepared Lua scripts
-src/cripts/
+src/scripts/
+lua_compiled/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
