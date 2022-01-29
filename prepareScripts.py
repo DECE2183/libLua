@@ -136,7 +136,7 @@ if __name__ == "__main__":
         script_path = str(path.relative_to(input_path))
         script_name = str(script_path[0:-4]).replace("/", "_").replace("\\", "_")
 
-        print(f"Script - {path} -> {output_path.joinpath(Path(script_name))}_lua.h")
+        print(f"Script - {path} -> {output_path.joinpath(Path(script_name))}_lua.hpp")
 
         script_file = path.open("r", encoding=("utf-8"))
         script_content = script_file.read()
