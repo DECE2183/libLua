@@ -55,11 +55,11 @@ def compileLuaScript(script_path):
         print(f"Compilation error: {compilation_result}")
         return None
 
-    script_file = open(bitstream_path)
+    script_file = open(bitstream_path, "rb")
     script_content = script_file.read()
     script_file.close()
 
-    return script_content.encode()
+    return script_content
 
 def removeLuaComments(script_content):
     new_script_content = script_content
@@ -84,7 +84,6 @@ def prepareScript(script_name, script_path, script_content, type):
         new_script_content = ''.join(("0x" + format(x, '02x') + ", ") for x in script_binary)
         new_script_content = new_script_content[:-2]
         new_script_content = "{ " + new_script_content + " }"
-        # new_script_content = str(script_binary)
     else:
         new_script_content = new_script_content.replace("\\", "\\\\")
         new_script_content = new_script_content.replace("\n", "\\r\\n")
