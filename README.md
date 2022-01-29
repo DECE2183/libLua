@@ -83,5 +83,5 @@ The analog functions were written in Lua and MicroPython using the standard math
 | Language | Time (us) | Function output |
 | --- | --- | --- |
 | C++ | 76 | 572.966329 |
-| Lua | 4983 | 572.9656 |
+| Lua | 1940 | 572.9656 |
 | MicroPython | 13832 | 570.7628 |
