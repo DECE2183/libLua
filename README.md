@@ -57,6 +57,11 @@ void loop() {
   
 }
 ```
+For an easier way to call lua script you may use this:
+```C++
+LuaScripts::hello_world_lua.call(L);
+```
+
 ## Performance
 Tested on ESP32 WROOM DevKit v1 board with 240 MHz Core clock.
 #### Test code
